@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #e5ded3;
+  --white: #ffffff;
+  --brown: #5C3317;
+  --brown-dark: #4a2511; /* Cor mais escura para hover */
+  --black: #000000;
+}
+
+
+body {
+  background-color: var(--background);
+
+  button{
+    cursor: pointer;
+  }
+}
+
+.bg-brown {
+  background-color: var(--brown);
+}
+
+.bg-brown-dark {
+  background-color: var(--brown-dark);
+}
+
+.bg-white {
+  background-color: var(--white);
+}
+
+.text-black {
+  color: var(--black);
+}
+
+.text-brown {
+  color: var(--brown);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
