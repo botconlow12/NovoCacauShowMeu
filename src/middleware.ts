@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
   const userAgent = req.headers.get('user-agent')
-  const referer = req.headers.get('referer')
 
   // Verificar user-agents suspeitos ou comportamento suspeito
   if (
