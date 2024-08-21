@@ -1,27 +1,26 @@
-// src/middleware.ts
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
-  const userAgent = req.headers.get('user-agent')?.toLowerCase() || ''
-  const isSuspicious = /curl|wget|httpie|saveweb|offline-browser/.test(
-    userAgent,
-  )
-  const isBot =
-    req.headers.get('x-requested-with') === 'XMLHttpRequest' ||
-    req.headers.get('referer')?.includes('saveweb')
+  const userAgent = req.headers.get('user-agent')
+  const referer = req.headers.get('referer')
 
-  if (isSuspicious || isBot) {
-    return new NextResponse('<html><body></body></html>', {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html',
-      },
-    })
+  // Verificação do User-Agent suspeito
+  if (userAgent && /bot|curl|wget|saveweb/i.test(userAgent)) {
+    // Retorna uma resposta vazia para user-agents suspeitos
+    return new Response('', { status: 200 })
   }
 
+  // Verificação do Referer
+  if (referer && !referer.startsWith('https://desafioshow.site')) {
+    // Retorna uma resposta vazia para referers inválidos
+    return new Response('', { status: 200 })
+  }
+
+  // Se não for um bot suspeito, permite a continuidade da requisição
   return NextResponse.next()
 }
 
+// Configuração do matcher para definir onde o middleware será aplicado
 export const config = {
-  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  matcher: '/:path*', // Aplica o middleware em todas as rotas
 }
