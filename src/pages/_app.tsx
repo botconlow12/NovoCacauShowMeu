@@ -30,8 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
               alert('Atenção: Ferramentas de desenvolvedor detectadas!')
               next()
             },
-            rewriteHTML:
-              '<html><body><h1>Conteúdo Protegido</h1></body></html>',
+            rewriteHTML: '<html><body><h1></h1></body></html>',
             disableIframeParents: true,
           }
 
@@ -40,6 +39,19 @@ export default function App({ Component, pageProps }: AppProps) {
         .catch((error) => {
           console.error('Erro ao carregar disable-devtool:', error)
         })
+
+      // Verifica o userAgent e redireciona se necessário
+      if (
+        !navigator.userAgent.match(
+          /(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/,
+        ) &&
+        window.innerWidth > 768
+      ) {
+        window.location.href = 'https://dogwifcoin.org/'
+      }
+
+      // Definindo uma variável global
+      ;(window as any).hasMobileFirstExtension = true
     }
   }, [])
 
