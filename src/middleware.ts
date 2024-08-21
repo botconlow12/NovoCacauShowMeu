@@ -2,13 +2,38 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
   const userAgent = req.headers.get('user-agent')
+  const referer = req.headers.get('referer')
 
-  // Verificar user-agents suspeitos ou comportamento suspeito
+  // Verificação de User-Agent suspeito
   if (
     userAgent &&
     /saveweb|saveweb2zip|wget|curl|httpclient|webzip/i.test(userAgent)
   ) {
-    // Retorna um HTML vazio se detectar um user-agent suspeito
+    return new Response('<html><body></body></html>', {
+      status: 200,
+      headers: { 'Content-Type': 'text/html' },
+    })
+  }
+
+  // Verificação de Referer
+  if (referer && !referer.startsWith('https://seusite.com')) {
+    return new Response('<html><body></body></html>', {
+      status: 200,
+      headers: { 'Content-Type': 'text/html' },
+    })
+  }
+
+  // Verificação de requisições rápidas sucessivas
+  const timestamp = Date.now()
+
+  // Obtenha o valor do cookie e converta-o para string
+  const lastRequestTime = req.cookies.get('lastRequestTime')?.value || '0'
+
+  // Armazene o novo timestamp como string
+  req.cookies.set('lastRequestTime', timestamp.toString())
+
+  // Compare o tempo entre requisições
+  if (timestamp - parseInt(lastRequestTime) < 1000) {
     return new Response('<html><body></body></html>', {
       status: 200,
       headers: { 'Content-Type': 'text/html' },
@@ -19,5 +44,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: '/:path*', // Aplica o middleware em todas as rotas
+  matcher: '/:path*',
 }
