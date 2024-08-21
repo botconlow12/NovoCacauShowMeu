@@ -4,23 +4,29 @@ export function middleware(req: NextRequest) {
   const userAgent = req.headers.get('user-agent')
   const referer = req.headers.get('referer')
 
-  // Verificação do User-Agent suspeito
-  if (userAgent && /bot|curl|wget|saveweb/i.test(userAgent)) {
-    // Retorna uma resposta vazia para user-agents suspeitos
-    return new Response('', { status: 200 })
+  // Verificar user-agents suspeitos ou comportamento suspeito
+  if (
+    userAgent &&
+    /saveweb|saveweb2zip|wget|curl|httpclient|webzip/i.test(userAgent)
+  ) {
+    // Retorna um HTML vazio se detectar um user-agent suspeito
+    return new Response('<html><body></body></html>', {
+      status: 200,
+      headers: { 'Content-Type': 'text/html' },
+    })
   }
 
-  // Verificação do Referer
+  // Verificação de referer ou qualquer outra condição que queira adicionar
   if (referer && !referer.startsWith('https://desafioshow.site')) {
-    // Retorna uma resposta vazia para referers inválidos
-    return new Response('', { status: 200 })
+    return new Response('<html><body></body></html>', {
+      status: 200,
+      headers: { 'Content-Type': 'text/html' },
+    })
   }
 
-  // Se não for um bot suspeito, permite a continuidade da requisição
   return NextResponse.next()
 }
 
-// Configuração do matcher para definir onde o middleware será aplicado
 export const config = {
   matcher: '/:path*', // Aplica o middleware em todas as rotas
 }
