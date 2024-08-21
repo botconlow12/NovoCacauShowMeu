@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 import { Html, Head, Main, NextScript } from 'next/document'
+import Script from 'next/script'
 
 export default function Document() {
   return (
@@ -23,15 +24,20 @@ export default function Document() {
             `,
           }}
         />
-        {/* Adicionando o script para carregamento dinâmico */}
-        <script
+        {/* Adiciona o script da biblioteca @noscrape/noscrape */}
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@noscrape/noscrape/dist/noscrape.min.js"
+          strategy="beforeInteractive"
+        />
+        <Script
+          id="noscrape-initializer"
           dangerouslySetInnerHTML={{
             __html: `
-              document.addEventListener('DOMContentLoaded', function() {
-                if (document.body.innerHTML.trim() === '') {
-                  document.body.innerHTML = '<p>Conteúdo carregado dinamicamente</p>';
-                }
-              });
+              if (window.Noscrape) {
+                Noscrape.init({
+                  // Opções de configuração, se houver
+                });
+              }
             `,
           }}
         />
