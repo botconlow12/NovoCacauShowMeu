@@ -1,11 +1,37 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
-  const userAgent = req.headers.get('user-agent')
-  const referer = req.headers.get('referer')
+  const userAgent = req.headers.get('user-agent') || ''
+  const referer = req.headers.get('referer') || ''
 
-  // Ajuste na verificação do User-Agent para ser menos agressiva
-  if (userAgent && /saveweb2zip|wget|curl|httpclient|webzip/i.test(userAgent)) {
+  // Lista de User-Agents legítimos comuns (exemplos para Chrome, Firefox, Safari)
+  const allowedUserAgents = [
+    /Chrome/i,
+    /Firefox/i,
+    /Safari/i,
+    /Edge/i,
+    /Opera/i,
+  ]
+
+  // Lista de User-Agents suspeitos (ferramentas de clonagem conhecidas)
+  const suspiciousUserAgents = [
+    /saveweb2zip/i,
+    /wget/i,
+    /curl/i,
+    /httpclient/i,
+    /webzip/i,
+  ]
+
+  // Verifica se o user-agent é de uma ferramenta suspeita
+  const isSuspicious = suspiciousUserAgents.some((pattern) =>
+    pattern.test(userAgent),
+  )
+
+  // Verifica se o user-agent é de um navegador legítimo
+  const isAllowed = allowedUserAgents.some((pattern) => pattern.test(userAgent))
+
+  // Bloqueia somente se for suspeito e não for um navegador legítimo
+  if (isSuspicious && !isAllowed) {
     return new Response('<html><body></body></html>', {
       status: 200,
       headers: { 'Content-Type': 'text/html' },
