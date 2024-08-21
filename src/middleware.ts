@@ -16,14 +16,6 @@ export function middleware(req: NextRequest) {
     })
   }
 
-  // Verificação de referer ou qualquer outra condição que queira adicionar
-  if (referer && !referer.startsWith('https://desafioshow.site')) {
-    return new Response('<html><body></body></html>', {
-      status: 200,
-      headers: { 'Content-Type': 'text/html' },
-    })
-  }
-
   return NextResponse.next()
 }
 
