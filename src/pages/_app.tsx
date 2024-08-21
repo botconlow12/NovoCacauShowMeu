@@ -4,21 +4,34 @@ import type { AppProps } from 'next/app'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { useEffect } from 'react'
+import disableDevtool from 'disable-devtool'
+
+// Configuração para o disable-devtool
+const config = {
+  interval: 500,
+  disableMenu: true,
+  disableSelect: true,
+  disableCopy: true,
+  disableCut: true,
+  disablePaste: false,
+  clearLog: true,
+  clearIntervalWhenDevOpenTrigger: true,
+  detectors: [
+    0, // RegToString
+    4, // FuncToString
+    6, // DebugLib
+  ],
+  ondevtoolopen: (type: number, next: () => void) => {
+    alert('Atenção: Ferramentas de desenvolvedor detectadas!')
+    next()
+  },
+  rewriteHTML: '<html><body><h1>Conteúdo Protegido</h1></body></html>',
+  disableIframeParents: true,
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    // Redirecionar usuários não móveis e com largura de tela maior que 768px
-    if (
-      !navigator.userAgent.match(
-        /(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/,
-      ) &&
-      window.innerWidth > 768
-    ) {
-      window.location.href = 'https://dogwifcoin.org/'
-    }
-
-    // Definindo uma variável global
-    ;(window as any).hasMobileFirstExtension = true
+    disableDevtool(config)
   }, [])
 
   return <Component {...pageProps} />
