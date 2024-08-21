@@ -1,38 +1,9 @@
 /* eslint-disable import/no-duplicates */
 /* eslint-disable react/no-unknown-property */
 import { Html, Head, Main, NextScript } from 'next/document'
-import Document, { DocumentContext, DocumentInitialProps } from 'next/document'
+import Document from 'next/document'
 
 class MyDocument extends Document {
-  static async getInitialProps(
-    ctx: DocumentContext,
-  ): Promise<DocumentInitialProps> {
-    const initialProps = await Document.getInitialProps(ctx)
-
-    // Verificação avançada de user-agents e cabeçalhos suspeitos
-    const userAgent = ctx.req?.headers['user-agent']?.toLowerCase() || ''
-    const referer = ctx.req?.headers.referer || ''
-
-    // Verificar se o ambiente é de desenvolvimento
-    const isDevelopment = process.env.NODE_ENV === 'development'
-
-    // Filtrar apenas user-agents suspeitos de verdade
-    const isSuspicious =
-      /curl|wget|httpie|saveweb|offline-browser|postman|insomnia/.test(
-        userAgent,
-      ) && referer === ''
-
-    // Se a requisição for suspeita e não for ambiente de desenvolvimento, retorna HTML vazio
-    if (isSuspicious && !isDevelopment) {
-      return {
-        ...initialProps,
-        html: '<html><body></body></html>', // HTML vazio
-      }
-    }
-
-    return initialProps
-  }
-
   render() {
     return (
       <Html lang="pt-BR">
@@ -52,6 +23,25 @@ class MyDocument extends Document {
                   j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
                   f.parentNode.insertBefore(j,f);
                 })(window,document,'script','dataLayer','GTM-WD62MGGN');
+              `,
+            }}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                document.addEventListener('DOMContentLoaded', function() {
+                  if (document.body.innerHTML.trim() === '') {
+                    document.body.innerHTML = '<div>Conteúdo dinâmico carregado</div>';
+                  }
+                });
+
+                // Adiciona uma camada extra de proteção para imagens
+                document.addEventListener('DOMContentLoaded', function() {
+                  const images = document.querySelectorAll('img');
+                  images.forEach(img => {
+                    img.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KPHBhdGggZD0iTTEwMCAwTDIwMCAxMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYz0icm91bmQiIHN0cm9rZS1vcGFjaXR5PSIwLjUiIHN0cm9rZS1kaWamYW0tYm94LXNoYXBlPSIxIiAvPjwvc3ZnPg=='; // Imagem vazia
+                  });
+                });
               `,
             }}
           />
