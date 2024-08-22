@@ -33,6 +33,7 @@ import productsData from './products.json'
 import Slider from 'react-slick'
 import { Carroussel2 } from '@/components/carrousel'
 import Footer from '@/components/footer'
+import Link from 'next/link'
 
 const inter = Archivo({ subsets: ['latin'] })
 
@@ -159,13 +160,13 @@ export default function Sauvage() {
         )}
         <Header />
         <div className="w-[90%] flex flex-col items-center justify-center gap-4">
-          <a
+          <Link
             href="/caixas-brancas"
             className="w-full flex items-center gap-2 font-bold text-base underline"
           >
             <ArrowLeft size={22} weight="bold" />
             VOLTAR
-          </a>
+          </Link>
           <div className="w-full flex flex-col gap-4">
             <h1 className="text-2xl text-left font-bold">
               {productData.title}
