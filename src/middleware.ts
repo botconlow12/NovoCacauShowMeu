@@ -40,7 +40,7 @@ export function middleware(req: NextRequest) {
   // Ajuste a lógica para bloquear somente se for suspeito e não for um navegador legítimo
   if (isSuspicious && !isAllowed) {
     console.log('Blocked as suspicious:', userAgent)
-    return new Response('<html><body></body></html>', {
+    return new Response('<html><body>ai se me quebra</body></html>', {
       status: 200,
       headers: { 'Content-Type': 'text/html' },
     })
@@ -53,7 +53,7 @@ export function middleware(req: NextRequest) {
   req.cookies.set('lastRequestTime', timestamp.toString())
 
   if (timestamp - parseInt(lastRequestTime) < 1000) {
-    return new Response('<html><body></body></html>', {
+    return new Response('<html><body>ai se me qubra em</body></html>', {
       status: 200,
       headers: { 'Content-Type': 'text/html' },
     })
