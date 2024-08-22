@@ -41,7 +41,7 @@ export function middleware(req: NextRequest) {
   // Ajuste a lógica para bloquear somente se for suspeito e não for um navegador legítimo
   if (isSuspicious && !isAllowed) {
     console.log('Blocked as suspicious:', userAgent)
-    return new Response('<html><body><h2></h2></body></html>', {
+    return new Response('<html><body></body></html>', {
       status: 200,
       headers: { 'Content-Type': 'text/html' },
     })
@@ -49,7 +49,7 @@ export function middleware(req: NextRequest) {
 
   // Verificação de Referer inválido
   if (referer && !referer.startsWith('https://seusite.com')) {
-    return new Response('<html><body><h2></h2></body></html>', {
+    return new Response('<html><body></body></html>', {
       status: 200,
       headers: { 'Content-Type': 'text/html' },
     })
