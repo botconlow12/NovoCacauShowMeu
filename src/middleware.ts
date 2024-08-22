@@ -4,15 +4,15 @@ export function middleware(req: NextRequest) {
   const userAgent = req.headers.get('user-agent') || ''
   const referer = req.headers.get('referer') || ''
 
-  console.log('User-Agent:', userAgent) // Adicione este log para depurar o User-Agent
+  console.log('User-Agent:', userAgent) // Log do User-Agent para depuração
 
-  // Lista de User-Agents legítimos comuns (exemplos para Chrome, Firefox, Safari)
+  // Lista de User-Agents legítimos comuns
   const allowedUserAgents = [
-    /Chrome/i,
-    /Firefox/i,
-    /Safari/i,
-    /Edge/i,
-    /Opera/i,
+    /Chrome\/\d+/i, // Verifica se contém 'Chrome/' seguido por um número
+    /Firefox\/\d+/i, // Verifica se contém 'Firefox/' seguido por um número
+    /Safari\/\d+/i, // Verifica se contém 'Safari/' seguido por um número
+    /Edg\/\d+/i, // Verifica se contém 'Edg/' seguido por um número (para Microsoft Edge)
+    /OPR\/\d+/i, // Verifica se contém 'OPR/' seguido por um número (para Opera)
   ]
 
   // Lista de User-Agents suspeitos (ferramentas de clonagem conhecidas)
@@ -24,12 +24,15 @@ export function middleware(req: NextRequest) {
     /webzip/i,
   ]
 
+  // Verifica se é um User-Agent suspeito
   const isSuspicious = suspiciousUserAgents.some((pattern) =>
     pattern.test(userAgent),
   )
+
+  // Verifica se é um User-Agent permitido (navegador comum)
   const isAllowed = allowedUserAgents.some((pattern) => pattern.test(userAgent))
 
-  // Ajuste a lógica para bloquear somente se for suspeito e não for um navegador legítimo
+  // Bloqueia se for suspeito e não permitido
   if (isSuspicious && !isAllowed) {
     console.log('Blocked as suspicious:', userAgent)
     return new Response('<html><body></body></html>', {
