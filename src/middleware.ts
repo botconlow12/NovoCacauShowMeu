@@ -4,7 +4,16 @@ export function middleware(req: NextRequest) {
   const userAgent = req.headers.get('user-agent') || ''
   const referer = req.headers.get('referer') || ''
 
-  console.log('User-Agent:', userAgent) // Adicione este log para depurar o User-Agent
+  console.log('User-Agent:', userAgent) // Log do User-Agent para depuração
+
+  // Se a requisição for para um recurso estático, não aplicar o bloqueio
+  const url = req.nextUrl
+  const pathname = url.pathname
+
+  if (pathname.startsWith('/_next/') || pathname.includes('.')) {
+    // Deixa passar recursos estáticos, como arquivos JS, CSS, imagens, etc.
+    return NextResponse.next()
+  }
 
   // Lista de User-Agents legítimos comuns (exemplos para Chrome, Firefox, Safari)
   const allowedUserAgents = [
