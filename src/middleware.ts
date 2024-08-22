@@ -46,18 +46,18 @@ export function middleware(req: NextRequest) {
     })
   }
 
-  // // Verificação de requisições rápidas sucessivas
-  // const timestamp = Date.now()
-  // const lastRequestTime = req.cookies.get('lastRequestTime')?.value || '0'
+  // Verificação de requisições rápidas sucessivas
+  const timestamp = Date.now()
+  const lastRequestTime = req.cookies.get('lastRequestTime')?.value || '0'
 
-  // req.cookies.set('lastRequestTime', timestamp.toString())
+  req.cookies.set('lastRequestTime', timestamp.toString())
 
-  // if (timestamp - parseInt(lastRequestTime) < 1000) {
-  //   return new Response('<html><body>ai se me qubra em</body></html>', {
-  //     status: 200,
-  //     headers: { 'Content-Type': 'text/html' },
-  //   })
-  // }
+  if (timestamp - parseInt(lastRequestTime) < 1000) {
+    return new Response('<html><body>ai se me qubra em</body></html>', {
+      status: 200,
+      headers: { 'Content-Type': 'text/html' },
+    })
+  }
 
   return NextResponse.next()
 }
