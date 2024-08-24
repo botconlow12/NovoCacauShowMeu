@@ -6,10 +6,10 @@ export default function Document() {
   return (
     <Html lang="pt-BR">
       <Head>
-        <script
+        {/* <script
           disable-devtool-auto
           src="https://cdn.jsdelivr.net/npm/disable-devtool"
-        />
+        /> */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -21,23 +21,6 @@ export default function Document() {
                 j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
                 f.parentNode.insertBefore(j,f);
               })(window,document,'script','dataLayer','GTM-WD62MGGN');
-            `,
-          }}
-        />
-        {/* Adiciona o script da biblioteca @noscrape/noscrape */}
-        <Script
-          src="https://cdn.jsdelivr.net/npm/@noscrape/noscrape/dist/noscrape.min.js"
-          strategy="beforeInteractive"
-        />
-        <Script
-          id="noscrape-initializer"
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (window.Noscrape) {
-                Noscrape.init({
-                  // Opções de configuração, se houver
-                });
-              }
             `,
           }}
         />
